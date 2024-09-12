@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react"
 import axios from "axios"
+import { useEffect, useState } from "react"
+import { FixedSizeList as List } from "react-window"
 
 const useDebounce = (value, delay) => {
     const [debouncedValue, setDebouncedValue] = useState(value)
@@ -16,7 +17,7 @@ const useDebounce = (value, delay) => {
 
     return debouncedValue
 }
-axios.defaults.url = "http://localhost:3000"
+
 function App() {
     const [input, setInput] = useState(0)
     const [data, setData] = useState([])
@@ -74,17 +75,13 @@ function App() {
                     onChange={(e) => setSearch(e.target.value)}
                     style={{ marginBottom: "10px", padding: "5px" }}
                 />
-                <select onChange={(e) => console.log("selected:", e.target.value)}>
-                    {filteredData.length > 0 ? (
-                        filteredData.map((item) => (
-                            <option key={item._id} value={item.value}>
-                                {item.value}
-                            </option>
-                        ))
-                    ) : (
-                        <option>No results</option>
+                <List height={400} itemCount={filteredData.length} itemSize={35} width={300}>
+                    {({ index, style }) => (
+                        <div style={style} className="option" onClick={() => console.log(filteredData[index].value)}>
+                            {filteredData[index].value}
+                        </div>
                     )}
-                </select>
+                </List>
             </div>
         </>
     )
